@@ -30,8 +30,9 @@ object IconTheme {
   def apply(name: String, base: List[String]) =
     new IconTheme(name, base)
 
-  def apply(name: String): IconTheme = {
+  def apply(name: String, func: (List[String] ⇒ List[String])): IconTheme = {
     var base = List("/usr/share/pixmaps")
+
     val home = System.getenv("HOME")
     val xdg = System.getenv("XDG_DATA_DIRS")
 
@@ -43,9 +44,14 @@ object IconTheme {
       base ::= System.getenv("HOME") + "/.icons"
     }
 
+    base = func(base)
+
     apply(name, base)
   }
 
+  def apply(name: String): IconTheme = {
+    apply(name, x ⇒ x)
+  }
 
   val HiColor = IconTheme("hicolor")
 
